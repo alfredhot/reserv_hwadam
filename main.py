@@ -52,7 +52,7 @@ async def on_message(message):
 		return
 
 	if message.content.startswith('$hello'):
-		await message.channel.send('Hello Loser!')
+		await message.channel.send('Hello World!')
 		embed = discord.Embed(title="화담숲 예약을 원하시나요?", color=0xF1C40F, url='https://hwadamsup.com/mReserve/mReservation.do')
 		embed.description = '''안녕하세요,
 		11월 17일 예약 가능상황을 실시간으로 알림을 보내는, 알림 전문 봇 '강 봇' 입니다.
@@ -67,7 +67,7 @@ async def on_message(message):
 		await user.dm_channel.send(embed=embed)
 
 	if message.content.startswith('$showme'):
-		await message.channel.send('Ok Loser!')
+		await message.channel.send('Ok!')
 		time_list = get_reserv_info()
 		await message.channel.send(time_list)
 
