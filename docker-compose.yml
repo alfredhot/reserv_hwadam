@@ -1,0 +1,12 @@
+version: '3'
+services:
+  reservation:
+    user: "1001:1001"
+    build:
+      context: .
+    volumes:
+      - .:/app
+    ports:
+      - "10002:80"
+    hostname: hwadam
+    container_name: hwadam
