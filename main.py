@@ -57,7 +57,8 @@ async def on_message(message):
 		embed.description = '''안녕하세요,
 		11월 17일 예약 가능상황을 실시간으로 알림을 보내는, 알림 전문 봇 '강 봇' 입니다.
 		예약 상황을 실시간으로 받아 보시려면 `$start` 를 보내주세요.
-		수동으로 봇을 종료 하실려면 `$stop` 보내주세요.
+		`$start`: 스케줄러 시작
+		`$stop`: 스케줄러 중지
 		'''
 
 		user = await client.fetch_user(int(message.author.id))
@@ -77,21 +78,23 @@ async def on_message(message):
 
 	if message.content.startswith("$start"):
 		loopMessage.start(message.author.id)
+		await message.channel.send("스케줄러가 시작 되었습니다.\n1분 마다 예약상황 체크후 예약가능시 메세지 전송 됩니다.\n스케줄러 멈추실려면 $stop 을 보내주세요.")
 
 	if message.content.startswith("$stop"):
 		loopMessage.stop()
+		await message.channel.send("스케줄러가 정상적으로 종료되었습니다.")
 
-@discordTasks.loop(seconds = 5)
+@discordTasks.loop(minutes = 1.0)
 async def loopMessage(user_id):
 	able_count = get_reserv_info()
-	# if able_count > 0: 
-	embed = discord.Embed(title="예약자리가 생겼습니다", color=0xF1C40F, url='https://hwadamsup.com/mReserve/mReservation.do')
-	embed.description = '''원하신 날짜에 예약 가능합니다. 신속히 예약을 진행 하시길 바랍니다.'''
+	if able_count > 0: 
+		embed = discord.Embed(title="예약자리가 생겼습니다", color=0xF1C40F, url='https://hwadamsup.com/mReserve/mReservation.do')
+		embed.description = '''원하신 날짜에 예약 가능합니다. 신속히 예약을 진행 하시길 바랍니다.'''
 
-	user = await client.fetch_user(int(user_id))
-	# user = client.user
-	await user.create_dm()
-	await user.dm_channel.send(embed=embed)
+		user = await client.fetch_user(int(user_id))
+		# user = client.user
+		await user.create_dm()
+		await user.dm_channel.send(embed=embed)
 
 
 client.run(get_token())
