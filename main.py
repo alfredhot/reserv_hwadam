@@ -13,7 +13,7 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 # 환경변수 읽기
-def load_environments:
+def load_environments():
 	# TOKEN 을 명문으로 표기하고 공개레포지토리에 올리면 디스코드에서 경고문자 오고 토큰을 강제 비활성화 시킴. 
 	# 그래서 레포지토리에 안 올라가는 ./.env 파일 별도 만들어서 읽어오기로
 	# .env 파일 격식:
@@ -38,8 +38,8 @@ def get_token():
 # 11월07일 예약가능 자리 취합
 def get_reserv_info():
 	data = {'selDate': "20221107", 'itemCode': "00001", 'discountTypeCode': "00009"}
-	response = requests.post("https://hwadamsup.com/mReserve/reserveMain.do", data = data)
-
+	response = requests.post("https://hwadamsup.com/mReserve/reserveInfo.do", data = data)
+	print(response.text)
 	json_data = json.loads(response.text)
 	able_count = 0
 	for time_info in json_data["timeList"]:
@@ -62,7 +62,7 @@ async def on_message(message):
 	if message.content.startswith('$hello'):
 		await message.channel.send('Hello World!') # 문자 받은 채널로 회신 보냄
 		# 임베드 메세지 구성
-		embed = discord.Embed(title="화담숲 예약을 원하시나요?", color=0xF1C40F, url='https://hwadamsup.com/mReserve/mReservation.do')
+		embed = discord.Embed(title="화담숲 예약을 원하시나요?", color=0xF1C40F, url='https://hwadamsup.com/mReserve/reserveMain.do')
 		embed.description = '''안녕하세요,
 		11월 17일 예약 가능상황을 실시간으로 알림을 보내는, 알림 전문 봇 '강 봇' 입니다.
 		예약 상황을 실시간으로 받아 보시려면 `$start` 를 보내주세요.
@@ -94,7 +94,7 @@ async def on_message(message):
 async def loopMessage(user_id):
 	able_count = get_reserv_info()
 	if able_count > 0: 
-		embed = discord.Embed(title="예약자리가 생겼습니다", color=0xF1C40F, url='https://hwadamsup.com/mReserve/mReservation.do')
+		embed = discord.Embed(title="예약자리가 생겼습니다", color=0xF1C40F, url='https://hwadamsup.com/mReserve/reserveMain.do')
 		embed.description = '''원하신 날짜에 예약 가능합니다. 신속히 예약을 진행 하시길 바랍니다.'''
 
 		# 스케줄러 시작하면 채널로 메세지 보내는거 아니라 사용자 한테 dm 으로 소식 보낸다
