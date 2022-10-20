@@ -39,7 +39,6 @@ def get_token():
 def get_reserv_info():
 	data = {'selDate': "20221107", 'itemCode': "00001", 'discountTypeCode': "00009"}
 	response = requests.post("https://hwadamsup.com/mReserve/reserveInfo.do", data = data)
-	print(response.text)
 	json_data = json.loads(response.text)
 	able_count = 0
 	for time_info in json_data["timeList"]:
