@@ -11,6 +11,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = discord.Client(intents=intents)
+last_alarm_time_map = {}
 
 # 환경변수 읽기
 def load_environments():
@@ -80,6 +81,9 @@ async def on_message(message):
 
 	# 스케줄러 시작
 	if message.content.startswith("$start"):
+		global last_alarm_time_map
+		last_alarm_time_map.clear()
+
 		loopMessage.start(message.author.id)
 		await message.channel.send("스케줄러가 시작 되었습니다.\n1분 마다 예약상황 체크후 예약가능시 메세지 전송 됩니다.\n스케줄러 멈추실려면 $stop 을 보내주세요.")
 
@@ -89,8 +93,10 @@ async def on_message(message):
 		await message.channel.send("스케줄러가 정상적으로 종료되었습니다.")
 
 # discord.py 에서 지원 해준 스케줄러
-@discordTasks.loop(minutes = 1.0)
+@discordTasks.loop(seconds = 20.0)
 async def loopMessage(user_id):
+	global last_alarm_time_map
+
 	able_count = get_reserv_info()
 	if able_count > 0: 
 		embed = discord.Embed(title="예약자리가 생겼습니다", color=0xF1C40F, url='https://hwadamsup.com/mReserve/reserveMain.do')
